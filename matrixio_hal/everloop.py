@@ -40,14 +40,20 @@ class Image:
 
     def render(self):
         data = []
-        for i in range(len(self.leds)):
+        for i in range(self.size):
             index = (i + self.size - self.rotate_offset) % self.size
             data.extend([
                 self.leds[index].green, 
                 self.leds[index].red,
                 self.leds[index].blue,
                 self.leds[index].white])
-        bus.write(bus.EVERLOOP_ADR + self.start * 2, data)
+        if self.start + self.size <= CREATOR_SIZE:
+            # image below or even max_size
+            bus.write(bus.EVERLOOP_ADR + self.start * 2, data)
+        else:
+            # split images stepping over max_size
+            bus.write(bus.EVERLOOP_ADR + self.start * 2, data[:(CREATOR_SIZE - self.start) * 4])
+            bus.write(bus.EVERLOOP_ADR, data[(CREATOR_SIZE - self.start) * 4:])
 
 def set_led(index, color, size=CREATOR_SIZE):
     index = index % size
