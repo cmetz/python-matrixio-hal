@@ -2,35 +2,37 @@ import bus
 
 CREATOR_SIZE = 35
 
-COLORS = {
-        "red":    [10,  0,  0],
-        "green":  [ 0, 10,  0],
-        "blue":   [ 0,  0, 10],
-        "yellow": [10,  5,  0],
-        "purple": [10,  0,  5],
-        "cyan":   [ 0, 10,  5],
-        "orange": [10,  2,  0]
+COLORS = {             #  R    G    B    W
+        "black":       [  0,   0,   0,   0],
+        "red":         [ 10,   0,   0,   0],
+        "green":       [  0,  10,   0,   0],
+        "blue":        [  0,   0,  10,   0],
+        "yellow":      [ 10,   5,   0,   0],
+        "purple":      [ 10,   0,   5,   0],
+        "cyan":        [  0,  10,   5,   0],
+        "orange":      [ 10,   2,   0,   0],
+        "_flashlight": [255, 255, 255, 255]
         }
-COLOR_NAMES = list(COLORS)
+COLOR_NAMES = [c for c in list(COLORS) if not c.startswith('_')]
 
 class Color:
-    def __init__(self, red=0, green=0, blue=0, white=0, color=None):
-        if color:
-            self.set_color(color)
+    def __init__(self, red=0, green=0, blue=0, white=0, color_name=None):
+        if color_name:
+            self.set_by_name(color_name)
         else:
             self.red = red
             self.green = green
             self.blue = blue
-        self.white = white
+            self.white = white
 
-    def set_color(self, color):
-        self.red, self.green, self.blue = COLORS[color]
+    def set_by_name(self, color_name):
+        self.red, self.green, self.blue, self.white = COLORS[color_name]
 
 class Image:
-    def __init__(self, start=0, size=CREATOR_SIZE):
+    def __init__(self, start=0, size=CREATOR_SIZE, init_color_name='black'):
         self.start = start
         self.size = size
-        self.leds = [Color() for _ in range(size)]
+        self.leds = [Color(color_name=init_color_name) for _ in range(size)]
         self.rotate_offset = 0
 
     def rotate(self, direction=1):
