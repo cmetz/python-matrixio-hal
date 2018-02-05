@@ -12,7 +12,7 @@ sudo apt-get update
 sudo apt-get upgrade
 
 # Installation
-sudo apt install libmatrixio-creator-hal
+sudo apt install matrixio-creator-init
 
 # install aditional python modules
 pip install -r requirements.txt
