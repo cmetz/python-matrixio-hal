@@ -15,7 +15,7 @@ sudo apt-get upgrade
 sudo apt install matrixio-creator-init
 
 # Enable SPI
-sudo raspi-config >> Interface options >> SPI >> yes >> save and reboot
+sudo raspi-config >> Interfacing options >> SPI >> yes >> exit and reboot
 
 # install additional python modules
 pip install -r requirements.txt
