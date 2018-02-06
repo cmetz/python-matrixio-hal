@@ -18,7 +18,8 @@ UV_UNPACK_FORMAT = 'f'
 PRESSURE_UNPACK_FORMAT = 'f' * 3
 HUMIDITY_UNPACK_FORMAT = 'ff' 
 IMU_UNPACK_FORMAT = 'f' * 12
-MCU_UNPACK_FORMAT = 'LL'
+MCU_INFO_UNPACK_FORMAT = 'LL'
+FPGA_INFO_UNPACK_FORMAT = 'LL'
 
 spi = periphery.SPI('/dev/spidev0.0', 3, 10000000)
 
@@ -31,4 +32,8 @@ def write(adress, data):
 def read(adress, unpack_format):
     data = _transfer((adress << 1) + 1, [0] * struct.calcsize(unpack_format))
     return struct.unpack(unpack_format, bytearray(data[2:]))
+
+# set some infos about the MCU and FPGA
+MCU_FIRMWARE_IDENTIFY, MCU_FIRMWARE_VERSION = ['{:x}'.format(d) for d in read(MCU_ADR, MCU_INFO_UNPACK_FORMAT)]
+FPGA_FIRMWARE_IDENTIFY, FPGA_FIRMWARE_VERSION = ['{:x}'.format(d) for d in read(CONF_ADR, FPGA_INFO_UNPACK_FORMAT)]
 
