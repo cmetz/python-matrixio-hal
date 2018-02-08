@@ -23,14 +23,14 @@ FPGA_INFO_UNPACK_FORMAT = 'LL'
 
 spi = periphery.SPI('/dev/spidev0.0', 3, 10000000)
 
-def _transfer(adress, data):
-    return spi.transfer([ord(b) for b in struct.pack('H', adress)] + data)
+def _transfer(address, data):
+    return spi.transfer([ord(b) for b in struct.pack('H', address)] + data)
 
-def write(adress, data):
-    _transfer(adress << 1, data)
+def write(address, data):
+    _transfer(address << 1, data)
 
-def read(adress, unpack_format):
-    data = _transfer((adress << 1) + 1, [0] * struct.calcsize(unpack_format))
+def read(address, unpack_format):
+    data = _transfer((address << 1) + 1, [0] * struct.calcsize(unpack_format))
     return struct.unpack(unpack_format, bytearray(data[2:]))
 
 # set some infos about the MCU and FPGA

@@ -8,12 +8,12 @@ class BaseSensor:
     def update(self):
         pass
     
-    def _read_sensor(self, adress, unpack_format): 
-        return bus.read(adress, unpack_format)
+    def _read_sensor(self, address, unpack_format): 
+        return bus.read(address, unpack_format)
 
 class IMU(BaseSensor):
     def __init__(self):
-        self._adress = bus.IMU_ADR
+        self._address = bus.IMU_ADR
         self._unpack_format = bus.IMU_UNPACK_FORMAT
         self.yaw = 0.0
         self.pitch = 0.0
@@ -41,11 +41,11 @@ class IMU(BaseSensor):
         self.gyro_z, \
         self.mag_x, \
         self.mag_y, \
-        self.mag_z = super(IMU, self)._read_sensor(self._adress, self._unpack_format)
+        self.mag_z = super(IMU, self)._read_sensor(self._address, self._unpack_format)
 
 class Pressure(BaseSensor):
     def __init__(self):
-        self._adress = bus.PRESSURE_ADR
+        self._address = bus.PRESSURE_ADR
         self._unpack_format = bus.PRESSURE_UNPACK_FORMAT
         self.altitude = 0.0
         self.pressure = 0.0
@@ -55,22 +55,22 @@ class Pressure(BaseSensor):
     def update(self):
         self.altitude, \
         self.pressure, \
-        self.temperature = super(Pressure, self)._read_sensor(self._adress, self._unpack_format)
+        self.temperature = super(Pressure, self)._read_sensor(self._address, self._unpack_format)
 
 
 class UV(BaseSensor):
     def __init__(self):
-        self._adress = bus.UV_ADR
+        self._address = bus.UV_ADR
         self._unpack_format = bus.UV_UNPACK_FORMAT
         self.uv = 0.0
         self.update()
 
     def update(self):
-        self.uv = super(UV, self)._read_sensor(self._adress, self._unpack_format)[0]
+        self.uv = super(UV, self)._read_sensor(self._address, self._unpack_format)[0]
 
 class Humidity(BaseSensor):
     def __init__(self):
-        self._adress = bus.HUMIDITY_ADR
+        self._address = bus.HUMIDITY_ADR
         self._unpack_format = bus.HUMIDITY_UNPACK_FORMAT
         self.humidity = 0.0
         self.temperature = 0.0
@@ -78,5 +78,5 @@ class Humidity(BaseSensor):
 
     def update(self):
         self.humidity, \
-        self.temperature = super(Humidity, self)._read_sensor(self._adress, self._unpack_format)
+        self.temperature = super(Humidity, self)._read_sensor(self._address, self._unpack_format)
 
