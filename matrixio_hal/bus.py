@@ -34,6 +34,12 @@ def read(address, unpack_format):
     return struct.unpack(unpack_format, bytearray(data[2:]))
 
 # set some infos about the MCU and FPGA
-MCU_FIRMWARE_IDENTIFY, MCU_FIRMWARE_VERSION = ['{:x}'.format(d) for d in read(MCU_ADR, MCU_INFO_UNPACK_FORMAT)]
-FPGA_FIRMWARE_IDENTIFY, FPGA_FIRMWARE_VERSION = ['{:x}'.format(d) for d in read(CONF_ADR, FPGA_INFO_UNPACK_FORMAT)]
+MCU_IDENTIFY, MCU_FIRMWARE_VERSION = ['{:x}'.format(d) for d in read(MCU_ADR, MCU_INFO_UNPACK_FORMAT)]
+FPGA_IDENTIFY, FPGA_FIRMWARE_VERSION = ['{:x}'.format(d) for d in read(CONF_ADR, FPGA_INFO_UNPACK_FORMAT)]
+
+MATRIX_DEVICE = 'unknown'
+if FPGA_IDENTIFY == '5c344e8':
+    MATRIX_DEVICE = 'creator'
+elif FPGA_IDENTIFY == '6032bad2':
+    MATRIX_DEVICE = 'voice'
 

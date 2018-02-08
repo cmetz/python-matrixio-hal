@@ -6,7 +6,7 @@ image = everloop.Image()
 image.leds[0].red = 20
 cnt = 1
 for i in range(1, len(image.leds)):
-    if i <= 17:
+    if i <= everloop.EVERLOOP_SIZE // 2:
         image.leds[i].red = 17
         image.leds[i].blue = cnt // 5
         cnt += 1
