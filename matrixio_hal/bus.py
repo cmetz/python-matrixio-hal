@@ -21,9 +21,13 @@ IMU_UNPACK_FORMAT = 'f' * 12
 MCU_INFO_UNPACK_FORMAT = 'LL'
 FPGA_INFO_UNPACK_FORMAT = 'LL'
 
+debug = False
+
 spi = periphery.SPI('/dev/spidev0.0', 3, 10000000)
 
 def _transfer(address, data):
+    if debug:
+        print(['{:x}'.format(ord(b)) for b in struct.pack('H', address)] + data)
     return spi.transfer([ord(b) for b in struct.pack('H', address)] + data)
 
 def write(address, data):

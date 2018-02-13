@@ -1,4 +1,5 @@
 import bus
+import atexit
 
 EVERLOOP_SIZE = 35 if bus.MATRIX_DEVICE == 'creator' else 18
 
@@ -14,6 +15,8 @@ COLORS = {             #  R    G    B    W
         "_flashlight": [255, 255, 255, 255]
         }
 COLOR_NAMES = [c for c in list(COLORS) if not c.startswith('_')]
+
+atexit_clear_everloop = True
 
 class Color:
     def __init__(self, red=0, green=0, blue=0, white=0, color_name=None):
@@ -59,3 +62,7 @@ def set_led(index, color, size=EVERLOOP_SIZE):
     index = index % size
     bus.write(bus.EVERLOOP_ADR + index * 2, [color.green, color.red, color.blue, color.white])
 
+@atexit.register
+def cleanup():
+    if atexit_clear_everloop:
+        Image().render()
