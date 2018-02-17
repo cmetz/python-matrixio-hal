@@ -1,4 +1,4 @@
-import bus
+from . import bus
 import abc
 
 class BaseSensor:

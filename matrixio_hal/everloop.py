@@ -1,4 +1,4 @@
-import bus
+from . import bus
 import atexit
 
 EVERLOOP_SIZE = 35 if bus.MATRIX_DEVICE == 'creator' else 18
