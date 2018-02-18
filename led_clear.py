@@ -1,6 +1,8 @@
 from matrixio_hal import everloop
 
-# just use the atexit callback in everloop to clear the everloop
-# atext_clear_everloop is True by default, but we set it for demonstration
-everloop.atexit_clear_everloop = True
+# atext_clear_everloop can be set to False
+# so we do not clear twice
+everloop.atexit_clear_everloop = False
+# render empty image
+everloop.Image().render()
 print('Leds cleared.')

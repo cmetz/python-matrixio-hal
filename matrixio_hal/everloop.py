@@ -1,4 +1,5 @@
 from . import bus
+from functools import wraps
 import atexit
 
 EVERLOOP_SIZE = 35 if bus.MATRIX_DEVICE == 'creator' else 18
@@ -17,6 +18,16 @@ COLORS = {             #  R    G    B    W
 COLOR_NAMES = [c for c in list(COLORS) if not c.startswith('_')]
 
 atexit_clear_everloop = True
+
+_everloop_used = False
+
+def _is_using_everloop(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        global _everloop_used
+        _everloop_used = True
+        return f(*args, **kwargs)
+    return wrapper
 
 class Color:
     def __init__(self, red=0, green=0, blue=0, white=0, color_name=None):
@@ -41,6 +52,7 @@ class Image:
     def rotate(self, direction=1):
         self.rotate_offset = (self.rotate_offset + direction)  % self.size
 
+    @_is_using_everloop
     def render(self):
         data = []
         for i in range(self.size):
@@ -58,11 +70,13 @@ class Image:
             bus.write(bus.EVERLOOP_ADR + self.start * 2, data[:(EVERLOOP_SIZE - self.start) * 4])
             bus.write(bus.EVERLOOP_ADR, data[(EVERLOOP_SIZE - self.start) * 4:])
 
+@_is_using_everloop
 def set_led(index, color, size=EVERLOOP_SIZE):
     index = index % size
     bus.write(bus.EVERLOOP_ADR + index * 2, [color.green, color.red, color.blue, color.white])
 
 @atexit.register
 def cleanup():
-    if atexit_clear_everloop:
+    if atexit_clear_everloop and _everloop_used:
         Image().render()
+
