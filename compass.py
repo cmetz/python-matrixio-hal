@@ -2,28 +2,30 @@ from matrixio_hal import sensors, everloop
 import math
 import time
 
-CALIBRATION_SAMPLES = 1500
+CALIBRATION_SAMPLES = 600
 
 
 def get_heading(imu, mag_bias=[0.0, 0.0, 0.0]):
     imu.update()
 
-    mx = imu.mag_x - mag_bias[0]
+
+    mx = -(imu.mag_x - mag_bias[0])
     my = imu.mag_y - mag_bias[1]
     mz = imu.mag_z - mag_bias[2]
 
-    heading = 0.0
-    if my == 0.0:
-        heading = math.pi if mx < 0 else 0
-    else:
-        heading = math.atan2(mx, my)
+    # tilt correction
+    norm = 1.0 / math.sqrt(imu.accel_x ** 2 + imu.accel_y ** 2 + imu.accel_z ** 2)
+    accel_x_norm = imu.accel_x * norm
+    accel_y_norm = imu.accel_y * norm
+    pitch = math.asin(accel_x_norm)
+    roll = -1 * math.asin(accel_y_norm / math.cos(pitch))
+    mx = mx * math.cos(pitch) + my * math.sin(roll)*math.sin(pitch) + mz * math.cos(roll) * math.sin(pitch)
+    my = my * math.cos(roll) - mz * math.sin(roll)
 
-    if heading > math.pi:
-        heading -= (2 * math.pi)
-    elif heading < 0:
-        heading += (2 * math.pi)
-
-    heading *= 180 / math.pi
+    # calculate heading
+    heading = math.atan2(my, mx) * 180 / math.pi
+    if heading < 0:
+        heading += 360
     return heading
 
 
