@@ -2,7 +2,7 @@ from matrixio_hal import sensors, everloop
 import math
 import time
 
-CALIBRATION_SAMPLES = 600
+CALIBRATION_SAMPLES = 1500
 
 
 def get_heading(imu, mag_bias=[0.0, 0.0, 0.0]):
