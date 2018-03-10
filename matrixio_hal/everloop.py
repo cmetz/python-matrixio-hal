@@ -1,6 +1,8 @@
+from . import matrixio_cpp_hal
 from . import bus
 from functools import wraps
 import atexit
+import time
 
 EVERLOOP_SIZE = 35 if bus.MATRIX_DEVICE == 'creator' else 18
 
@@ -21,6 +23,10 @@ atexit_clear_everloop = True
 
 _everloop_used = False
 
+_cpp_ev_image = matrixio_cpp_hal.PyEverloopImage()
+_cpp_ev = matrixio_cpp_hal.PyEverloop()
+_cpp_ev.Setup(bus.bus)
+
 def _is_using_everloop(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -29,7 +35,7 @@ def _is_using_everloop(f):
         return f(*args, **kwargs)
     return wrapper
 
-class Color:
+class Color(object):
     def __init__(self, red=0, green=0, blue=0, white=0, color_name=None):
         if color_name:
             self.set_by_name(color_name)
@@ -42,7 +48,7 @@ class Color:
     def set_by_name(self, color_name):
         self.red, self.green, self.blue, self.white = COLORS[color_name]
 
-class Image:
+class Image(object):
     def __init__(self, start=0, size=EVERLOOP_SIZE, init_color_name='black'):
         self.start = start
         self.size = size
@@ -54,26 +60,28 @@ class Image:
 
     @_is_using_everloop
     def render(self):
+        global _cpp_ev
+        global _cpp_ev_image
         data = []
         for i in range(self.size):
-            index = (i + self.size - self.rotate_offset) % self.size
-            data.extend([
-                self.leds[index].green, 
-                self.leds[index].red,
-                self.leds[index].blue,
-                self.leds[index].white])
-        if self.start + self.size <= EVERLOOP_SIZE:
-            # image below or even max_size
-            bus.write(bus.EVERLOOP_ADR + self.start * 2, data)
-        else:
-            # split images stepping over max_size
-            bus.write(bus.EVERLOOP_ADR + self.start * 2, data[:(EVERLOOP_SIZE - self.start) * 4])
-            bus.write(bus.EVERLOOP_ADR, data[(EVERLOOP_SIZE - self.start) * 4:])
+            index = (i - self.rotate_offset) % self.size
+            ev_index = (self.start + i) % EVERLOOP_SIZE
+            _cpp_ev_image.leds[ev_index].red = self.leds[index].green
+            _cpp_ev_image.leds[ev_index].green = self.leds[index].red
+            _cpp_ev_image.leds[ev_index].blue = self.leds[index].blue
+            _cpp_ev_image.leds[ev_index].white = self.leds[index].white
+        _cpp_ev.Write(_cpp_ev_image)
 
 @_is_using_everloop
-def set_led(index, color, size=EVERLOOP_SIZE):
-    index = index % size
-    bus.write(bus.EVERLOOP_ADR + index * 2, [color.green, color.red, color.blue, color.white])
+def set_led(index, color):
+    global _cpp_ev
+    global _cpp_ev_image
+    index = index % EVERLOOP_SIZE
+    _cpp_ev_image.leds[index].red = color.green
+    _cpp_ev_image.leds[index].green = color.red
+    _cpp_ev_image.leds[index].blue = color.blue
+    _cpp_ev_image.leds[index].white = color.white
+    _cpp_ev.Write(_cpp_ev_image)
 
 @atexit.register
 def cleanup():

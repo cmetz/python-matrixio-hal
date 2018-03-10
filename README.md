@@ -1,5 +1,5 @@
 # python-matrixio-hal
-Python matrixio (Creator) hal using SPI
+Python matrixio (Matrix Creator / Voice)
 
 ## Requirements installation
 ```
@@ -12,20 +12,23 @@ sudo apt-get update
 sudo apt-get upgrade
 
 # Installation
-sudo apt install matrixio-creator-init
+sudo apt install matrixio-creator-init libmatrixio-creator-hal-dev
 
 # Enable SPI
 sudo raspi-config >> Interfacing options >> SPI >> yes >> exit and reboot
 
-# install additional python modules
+# install additional python modules (Cython for building the cpp binding)
 pip install -r requirements.txt
+
+# install the package matrixio_hal to your python environment
+python setup.py install
 ```
 
 ## Examples
 
-Run the examples in the base dir.
+Run the examples in the examples folder.
 
-## Docker example
+## Docker example (currently brocken)
 
 ### Install docker if not installed
 ```
