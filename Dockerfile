@@ -5,4 +5,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 ENTRYPOINT ["/sbin/tini", "-g",  "--"]
 STOPSIGNAL SIGTERM
-CMD [ "python", "./led_rotate.py" ]
+CMD [ "python", "./exmaples/led_rotate.py" ]
