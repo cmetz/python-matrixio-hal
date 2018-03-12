@@ -11,7 +11,7 @@ def get_heading(imu, mag_bias=[0.0, 0.0, 0.0]):
 
     mx = -(imu.mag_x - mag_bias[0])
     my = imu.mag_y - mag_bias[1]
-    mz = imu.mag_z - mag_bias[2]
+    mz = -(imu.mag_z - mag_bias[2])
 
     # tilt correction
     norm = 1.0 / math.sqrt(imu.accel_x ** 2 + imu.accel_y ** 2 + imu.accel_z ** 2)
