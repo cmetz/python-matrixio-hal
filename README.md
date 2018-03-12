@@ -17,11 +17,9 @@ sudo apt install matrixio-creator-init libmatrixio-creator-hal-dev
 # Enable SPI
 sudo raspi-config >> Interfacing options >> SPI >> yes >> exit and reboot
 
-# install additional python modules (Cython for building the cpp binding)
-pip install -r requirements.txt
-
-# install the package matrixio_hal to your python environment
-python setup.py install
+# install the package python-matrixio-hal to your python environment
+sudo apt-get install cython (optional, to speedup build process)
+pip install .
 ```
 
 ## Examples

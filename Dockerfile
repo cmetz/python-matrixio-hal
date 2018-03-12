@@ -10,7 +10,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 COPY matrixio_hal/ ./matrixio_hal/
 COPY setup.py .
-RUN python setup.py install
+RUN pip install .
 WORKDIR /usr/src/app
 COPY examples/*.py ./
 ENTRYPOINT ["/sbin/tini", "-g",  "--"]
