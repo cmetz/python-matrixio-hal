@@ -12,6 +12,7 @@ setup(
       version='1.0.0',
       description='Python HAL for the Matrix Creator / Voice wrapping the C++ drivers',
       author='cmetz',
+      author_email='christoph.metz@gulp.de',
       url='https://github.com/cmetz/python-matrixio-hal',
       license='MIT',
       packages=['matrixio_hal'],

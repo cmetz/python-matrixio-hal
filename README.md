@@ -17,9 +17,9 @@ sudo apt install matrixio-creator-init libmatrixio-creator-hal-dev
 # Enable SPI
 sudo raspi-config >> Interfacing options >> SPI >> yes >> exit and reboot
 
-# install the package python-matrixio-hal to your python environment
+# install python-matrixio-hal with pip
 sudo apt-get install cython (optional, to speedup build process)
-pip install .
+pip install python-matrixio-hal
 ```
 
 ## Examples
@@ -35,7 +35,7 @@ sudo CHANNEL=stable sh get-docker.sh
 sudo usermod -aG docker pi
 ```
 
-### Build and run led\_roate example (Dockerfile)
+### Build and run led\_roate example (Dockerfile in examples)
 ```
 # Build the docker image led_rotate (it uses the examples from the examples folder)
 docker build -t led_rotate .
