@@ -39,15 +39,26 @@ sudo usermod -aG docker pi
 
 ### Build and run led\_roate example (Dockerfile)
 ```
-# Build the docker image led_rotate
+# Build the docker image led_rotate (it uses the examples from the examples folder)
 docker build -t led_rotate .
 
-# Run led_rotate
-docker run --name led_rotate -d --rm --device=/dev/spidev0.0 led_rotate
+# Run led_rotate as new container led_rotate
+docker run --name led_rotate -d --device=/dev/spidev0.0 led_rotate
 
 # List active containers
 docker ps
 
 # Stop it
 docker stop led_rotate
+
+# Restart it
+docker start led_rotate
+
+# Remove Cotainer
+docker stop led_roate
+docker rm led_roate
+
+# Auto restart cotainer after a reboot
+# create the cotainer with --restart always
+docker run --name led_rotate -d --restart always --device=/dev/spidev0.0 led_rotate
 ```
