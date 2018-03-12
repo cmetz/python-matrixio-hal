@@ -1,5 +1,5 @@
 # python-matrixio-hal
-Python matrixio (Matrix Creator / Voice)
+Python driver for Matrix Creator / Voice
 
 ## Requirements installation
 ```
@@ -28,7 +28,7 @@ python setup.py install
 
 Run the examples in the examples folder.
 
-## Docker example (currently brocken)
+## Docker example
 
 ### Install docker if not installed
 ```
