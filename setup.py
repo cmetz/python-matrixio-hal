@@ -9,7 +9,7 @@ ext = [Extension('matrixio_hal.matrixio_cpp_hal',
 
 setup(
       name='python-matrixio-hal',
-      version='1.0.0',
+      version='1.0.1',
       description='Python HAL for the Matrix Creator / Voice wrapping the C++ drivers',
       author='cmetz',
       author_email='christoph.metz@gulp.de',

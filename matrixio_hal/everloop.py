@@ -66,8 +66,8 @@ class Image(object):
         for i in range(self.size):
             index = (i - self.rotate_offset) % self.size
             ev_index = (self.start + i) % EVERLOOP_SIZE
-            _cpp_ev_image.leds[ev_index].red = self.leds[index].green
-            _cpp_ev_image.leds[ev_index].green = self.leds[index].red
+            _cpp_ev_image.leds[ev_index].red = self.leds[index].red
+            _cpp_ev_image.leds[ev_index].green = self.leds[index].green
             _cpp_ev_image.leds[ev_index].blue = self.leds[index].blue
             _cpp_ev_image.leds[ev_index].white = self.leds[index].white
         _cpp_ev.Write(_cpp_ev_image)
@@ -77,8 +77,8 @@ def set_led(index, color):
     global _cpp_ev
     global _cpp_ev_image
     index = index % EVERLOOP_SIZE
-    _cpp_ev_image.leds[index].red = color.green
-    _cpp_ev_image.leds[index].green = color.red
+    _cpp_ev_image.leds[index].red = color.red
+    _cpp_ev_image.leds[index].green = color.green
     _cpp_ev_image.leds[index].blue = color.blue
     _cpp_ev_image.leds[index].white = color.white
     _cpp_ev.Write(_cpp_ev_image)
