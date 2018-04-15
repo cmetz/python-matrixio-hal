@@ -12,8 +12,8 @@ def sigterm_handler(signal, frame):
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
-bus = matrixio_cpp_hal.PyWishboneBus()
-bus.SpiInit()
+bus = matrixio_cpp_hal.PyMatrixIOBus()
+bus.Init()
 
 # set some infos about the MCU and FPGA
 mcu_data = matrixio_cpp_hal.PyMCUData()
@@ -24,10 +24,8 @@ MCU_IDENTIFY, MCU_FIRMWARE_VERSION = ['{:x}'.format(d) for d in [mcu_data.ID, mc
 del mcu_data
 del mcu
 
-fpga_data = matrixio_cpp_hal.PyReadData(struct.calcsize('LL'))
-bus.SpiRead(0x0000 >> 1, fpga_data)
-FPGA_IDENTIFY, FPGA_FIRMWARE_VERSION = ['{:x}'.format(d) for d in struct.unpack('LL', bytearray(fpga_data.get()))]
-del fpga_data
+FPGA_IDENTIFY = '{:x}'.format(bus.MatrixName())
+FPGA_FIRMWARE_VERSION = '{:x}'.format(bus.MatrixVersion())
 
 MATRIX_DEVICE = 'unknown'
 if FPGA_IDENTIFY == '5c344e8':
@@ -36,8 +34,5 @@ elif FPGA_IDENTIFY == '6032bad2':
     MATRIX_DEVICE = 'voice'
 
 # set FPGA_FREQUENCY
-
-FPGA_FREQUENCY = 0
-if bus.GetFPGAFrequency():
-    FPGA_FREQUENCY = bus.FPGAClock()
+FPGA_FREQUENCY = bus.FPGAClock()
 

@@ -4,7 +4,7 @@ from functools import wraps
 import atexit
 import time
 
-EVERLOOP_SIZE = 35 if bus.MATRIX_DEVICE == 'creator' else 18
+EVERLOOP_SIZE = bus.bus.MatrixLeds()
 
 COLORS = {             #  R    G    B    W
         "black":       [  0,   0,   0,   0],

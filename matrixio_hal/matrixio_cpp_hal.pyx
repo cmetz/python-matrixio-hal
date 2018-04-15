@@ -5,19 +5,21 @@ from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref
 from cython.operator cimport preincrement as incr
 
-cdef extern from "matrix_hal/wishbone_bus.h" namespace "matrix_hal":
-    cdef cppclass WishboneBus:
-        WishboneBus() except +
-        bool SpiInit()
-        bool SpiRead(uint16_t add, unsigned char* data, int length)
-        void SpiClose()
-        bool GetFPGAFrequency()
+cdef extern from "matrix_hal/matrixio_bus.h" namespace "matrix_hal":
+    cdef cppclass MatrixIOBus:
+        MatrixIOBus() except +
+        bool Init()
+        bool Read(uint16_t add, unsigned char* data, int length)
         uint32_t FPGAClock()
+        uint32_t MatrixName()
+        uint32_t MatrixVersion()
+        int MatrixLeds()
+        bool IsDirectBus()
 
 cdef extern from "matrix_hal/matrix_driver.h" namespace "matrix_hal":
     cdef cppclass MatrixDriver:
         MatrixDriver() except +
-        void Setup(WishboneBus* wishbone)
+        void Setup(MatrixIOBus* wishbone)
 
 cdef extern from "matrix_hal/fw_data.h" namespace "matrix_hal":
     cdef cppclass MCUData:
@@ -105,7 +107,7 @@ cdef extern from "matrix_hal/gpio_control.h" namespace "matrix_hal":
 
     cdef cppclass GPIOControl:
         GPIOControl() except +
-        void Setup(WishboneBus* bus)
+        void Setup(MatrixIOBus* bus)
         bool SetMode(uint16_t pin, uint16_t mode)
         bool SetFunction(uint16_t pin, uint16_t function)
         bool SetGPIOValue(uint16_t pin, uint16_t value)
@@ -131,27 +133,30 @@ cdef class PyReadData:
     def get(self):
         return [self.data[i] for i in range(0, self.size)]
 
-cdef class PyWishboneBus:
-    cdef WishboneBus* thisptr
+cdef class PyMatrixIOBus:
+    cdef MatrixIOBus* thisptr
     def __cinit__(self):
-        self.thisptr = new WishboneBus()
+        self.thisptr = new MatrixIOBus()
     def __dealloc__(self):
         del self.thisptr
 
-    def SpiInit(self):
-        return self.thisptr.SpiInit()
+    def Init(self):
+        return self.thisptr.Init()
 
-    def SpiRead(self, add, PyReadData data):
-        return self.thisptr.SpiRead(add, data.data, data.size)
-
-    def SpiClose(self):
-        self.thisptr.SpiClose()
-
-    def GetFPGAFrequency(self):
-        return self.thisptr.GetFPGAFrequency()
+    def Read(self, add, PyReadData data):
+        return self.thisptr.Read(add, data.data, data.size)
 
     def FPGAClock(self):
         return self.thisptr.FPGAClock()
+
+    def MatrixName(self):
+        return self.thisptr.MatrixName()
+
+    def MatrixVersion(self):
+        return self.thisptr.MatrixVersion()
+
+    def MatrixLeds(self):
+        return self.thisptr.MatrixLeds()
 
 cdef class PyMatrixDriver:
     cdef MatrixDriver *driverptr
@@ -162,7 +167,7 @@ cdef class PyMatrixDriver:
         if type(self) is PyMatrixDriver:
             del self.driverptr
 
-    def Setup(self, PyWishboneBus bus):
+    def Setup(self, PyMatrixIOBus bus):
         self.driverptr.Setup(bus.thisptr)
 
 
@@ -423,7 +428,7 @@ cdef class PyGPIOControl:
     def __dealloc__(self):
         del self.thisptr
 
-    def Setup(self, PyWishboneBus bus):
+    def Setup(self, PyMatrixIOBus bus):
         self.thisptr.Setup(bus.thisptr)
 
     def SetMode(self, pin, mode):
