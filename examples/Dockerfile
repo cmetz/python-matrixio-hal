@@ -9,7 +9,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 WORKDIR /usr/src/app
 COPY . .
-CMD pip install -r requirements.txt
+RUN pip install -r requirements.txt
 ENTRYPOINT ["/sbin/tini", "-g",  "--"]
 STOPSIGNAL SIGTERM
 CMD [ "python", "./led_rotate.py" ]

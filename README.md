@@ -18,7 +18,7 @@ sudo apt install matrixio-creator-init libmatrixio-creator-hal-dev
 sudo raspi-config >> Interfacing options >> SPI >> yes >> exit and reboot
 
 # install python-matrixio-hal with pip
-sudo apt-get install cython (optional, to speedup build process)
+sudo apt-get install cython (optional - to speedup build process - install cython3 for python3)
 pip install python-matrixio-hal
 ```
 
@@ -41,7 +41,10 @@ sudo usermod -aG docker pi
 docker build -t led_rotate .
 
 # Run led_rotate as new container led_rotate
+# SPI:
 docker run --name led_rotate -d --device=/dev/spidev0.0 led_rotate
+# Kernel modules:
+docker run --name led_rotate -d --device=/dev/matrixio_regmap led_rotate
 
 # List active containers
 docker ps
